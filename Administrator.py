@@ -43,3 +43,11 @@ class Admin:
     def chargemoney(self,name,money):
         assert(money>0)
         self.putmoney(name,-money)
+
+    def checkmoney(self,name,moneyToBeCharged):
+        mtdf = pd.read_sql_table('moneytable', self.moneyengine, columns=['Name', 'Money'])
+        mtdf['Money'] = mtdf['Money'].apply(lambda x: float(x))
+        if mtdf.loc[mtdf['Name'] == name ] > moneyToBeCharged:
+            return True
+        else:
+            return False

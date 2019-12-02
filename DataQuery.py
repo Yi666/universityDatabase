@@ -11,19 +11,22 @@ class DataQuery:
         result = conn.execute(command)
         dfresult = pd.DataFrame(result)
         length = dfresult.count()
-        contributors = dfresult[22]
+        contributors = dfresult[len(dfresult.columns)-1]
         portions = defaultdict(lambda: 0)
-        money = defaultdict()
+        money = defaultdict(lambda : 0)
         for name in contributors:
             portions[name] += 1
-        mtdf = pd.read_sql_table(moneytable, moneyengine)
+        mtdf = pd.read_sql_table(moneytable, moneyengine, columns=['Name', 'Money'])
         mtdf['Money'] = mtdf['Money'].apply(lambda x: float(x))
         for name in set(contributors):
-            portions[name] /= length
+            portions[name] = portions[name] / length[0]
             money[name] = portions[name] * donation
+
             if name in mtdf['Name']:
                 mtdf.loc[mtdf['Name'] == name] += money[name]
             else:
-                temp = pd.DataFrame([name, money[name]], columns=['Name', 'Money'])
+                temp = pd.DataFrame([[name, money[name]]], columns=['Name', 'Money'])
+
                 mtdf = mtdf.append(temp)
+
         mtdf.to_sql(moneytable, moneyengine, if_exists='replace')
