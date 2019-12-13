@@ -27,11 +27,10 @@ class DatabaseInitial:
             firstRow = next(reader)
 
         tableName = fileName.split(".")[0]
+        print(tableName)
         createTableCommands = "create table " + tableName + "("
         str = " varchar(255)"
-
         createTableCommands += "index int, "
-
         for i in firstRow:
             splitStr = ""
             for j in i:
@@ -55,4 +54,12 @@ class DatabaseInitial:
             self.conn.close()
             print("PostgreSQL connection is closed")
 
+# create a new table in the database
+"""
+initial = DatabaseInitial
+initial.databaseInitialization(initial)
+initial.createTable(initial,"Fire_Safety_Deficiencies.csv")
+initial.turnOffDatabase(initial)
+
+"""
 

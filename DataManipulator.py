@@ -18,18 +18,14 @@ class DataManipulator:
         newdf = newdf.drop_duplicates(keep='first')
         hashes = newdf.apply(lambda x: str(hash(str(tuple(x)))), axis=1)
         newdf['hashes'] = hashes
+        """
         olddf = pd.read_sql_table(dataset, dataengine)
         oldhashes = set(olddf['hashes'])
-
+        
         if (not olddf.empty):
             for i in oldhashes:
                 newdf = newdf.loc[newdf['hashes'] != i]
-            """
-            for i in newdf['hashes']:
-                if i in oldhashes:
-                    newdf.drop(i)
-            """
-            # newdf=newdf.loc[newdf.Hashes not in oldhashes]
+        """
         if(newdf.empty):
             return False
         newdf['contributor'] = contributer

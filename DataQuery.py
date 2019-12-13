@@ -2,14 +2,18 @@ import pandas as pd
 import psycopg2 as pcg
 import sqlalchemy as sqlal
 from collections import defaultdict
-
+import threading
 
 class DataQuery:
     @staticmethod
     def dataquerier(donation, dataengine, command, moneytable, moneyengine):
+        #lock = threading.Lock
+        #lock.acquire()
         conn = dataengine.connect()
         result = conn.execute(command)
+        """
         dfresult = pd.DataFrame(result)
+        print(dfresult)
         length = dfresult.count()
         contributors = dfresult[len(dfresult.columns)-1]
         portions = defaultdict(lambda: 0)
@@ -30,3 +34,5 @@ class DataQuery:
                 mtdf = mtdf.append(temp)
 
         mtdf.to_sql(moneytable, moneyengine, if_exists='replace')
+        #lock.release()
+        """

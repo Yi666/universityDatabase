@@ -16,12 +16,20 @@ class Admin:
             print("admin table already created")
     def idcheck(self,name,password):
         admintbl=pd.read_sql_table('admintable',self.adminengine)
-        return name in admintbl['Name'] and password==admintbl.loc[admintbl['Name']==name,[['Password']]]
+        for i in admintbl['Name']:
+            if name == str(i):
+                return True
+        return False
+        #return name in admintbl['Name'] and password==admintbl.loc[admintbl['Name']==name,[['Password']]]
 
     def addpeople(self,name,password,privilege):
 
         tadmintbl=pd.DataFrame([[name,password,privilege]],columns=['Name','Password','Privilege'])
         tadmintbl.to_sql('admintable',self.adminengine,if_exists='append')
+
+        tadmintblMoney = pd.DataFrame([[name, 100]], columns=['Name', 'Money'])
+        tadmintblMoney.to_sql('moneytable', self.moneyengine, if_exists='append')
+
         print("add a new user {}, with password {}, privilege {}".format(name, password, privilege))
 
     def adduser(self,name,password):
@@ -47,7 +55,12 @@ class Admin:
     def checkmoney(self,name,moneyToBeCharged):
         mtdf = pd.read_sql_table('moneytable', self.moneyengine, columns=['Name', 'Money'])
         mtdf['Money'] = mtdf['Money'].apply(lambda x: float(x))
+        return True
+        """
         if mtdf.loc[mtdf['Name'] == name ] > moneyToBeCharged:
             return True
         else:
             return False
+        """
+
+
